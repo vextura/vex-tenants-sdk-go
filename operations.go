@@ -30,7 +30,12 @@ func (c *Client) AddTenantRegion(ctx context.Context, in AddTenantRegionInput) e
 	u := c.endpoint + path
 
 	var bodyReader io.Reader
-	body, err := json.Marshal(in)
+	// Only body members: path, query and header members are not serialized.
+	body, err := json.Marshal(struct {
+		Region string `json:"region"`
+	}{
+		Region: in.Region,
+	})
 	if err != nil {
 		return fmt.Errorf("AddTenantRegion: marshal body: %w", err)
 	}
