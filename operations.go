@@ -204,7 +204,8 @@ func (c *Client) ListTenants(ctx context.Context) (ListTenantsOutput, error) {
 		return zero, nil
 	}
 	var out ListTenantsOutput
-	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+	// @httpPayload output: the whole body is this member.
+	if err := json.NewDecoder(resp.Body).Decode(&out.Tenants); err != nil {
 		return zero, fmt.Errorf("ListTenants: decode response: %w", err)
 	}
 	return out, nil

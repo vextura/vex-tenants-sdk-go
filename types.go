@@ -25,7 +25,8 @@ type DeleteTenantInput struct {
 
 // ListTenantRegionsOutput mirrors the Smithy structure of the same name.
 type ListTenantRegionsOutput struct {
-	Regions []string `json:"regions"`
+	Tenant  string          `json:"tenant"`
+	Regions []*TenantRegion `json:"regions"`
 }
 
 // ListTenantsOutput mirrors the Smithy structure of the same name.
@@ -41,14 +42,35 @@ type RemoveTenantRegionInput struct {
 
 // Tenant mirrors the Smithy structure of the same name.
 type Tenant struct {
-	Id        string   `json:"id"`
-	Name      string   `json:"name"`
-	Email     string   `json:"email,omitempty"`
-	CreatedAt string   `json:"created_at,omitempty"`
-	Regions   []string `json:"regions,omitempty"`
+	AccountId int             `json:"account_id,omitempty"`
+	Id        string          `json:"id"`
+	Name      string          `json:"name"`
+	Email     string          `json:"email,omitempty"`
+	License   *TenantLicense  `json:"license,omitempty"`
+	Regions   []*TenantRegion `json:"regions,omitempty"`
+	CreatedAt string          `json:"created_at,omitempty"`
 }
 
 // TenantIdPath mirrors the Smithy structure of the same name.
 type TenantIdPath struct {
 	Id string `json:"id"`
+}
+
+// TenantLicense mirrors the Smithy structure of the same name.
+type TenantLicense struct {
+	WorkflowLimit        int    `json:"workflow_limit,omitempty"`
+	ValidFrom            string `json:"valid_from,omitempty"`
+	ExpiresAt            string `json:"expires_at,omitempty"`
+	GracePeriodDays      int    `json:"grace_period_days,omitempty"`
+	Tier                 string `json:"tier,omitempty"`
+	CurrentWorkflowCount int    `json:"current_workflow_count,omitempty"`
+	OverageStartedAt     string `json:"overage_started_at,omitempty"`
+}
+
+// TenantRegion mirrors the Smithy structure of the same name.
+type TenantRegion struct {
+	Region    string `json:"region"`
+	Env       string `json:"env,omitempty"`
+	Status    string `json:"status,omitempty"`
+	EnabledAt string `json:"enabled_at,omitempty"`
 }
