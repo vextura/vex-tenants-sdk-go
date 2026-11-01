@@ -98,6 +98,41 @@ func (c *Client) CreateTenant(ctx context.Context, in CreateTenantInput) (Tenant
 	return out, nil
 }
 
+// DeleteTenant calls DELETE /tenants/{id}.
+func (c *Client) DeleteTenant(ctx context.Context, in DeleteTenantInput) error {
+	path := fmt.Sprintf("/tenants/%s", url.PathEscape(in.Id))
+	u := c.endpoint + path
+	q := url.Values{}
+	if in.Confirm != "" {
+		q.Set("confirm", in.Confirm)
+	}
+	if encoded := q.Encode(); encoded != "" {
+		u += "?" + encoded
+	}
+
+	var bodyReader io.Reader
+
+	req, err := http.NewRequestWithContext(ctx, "DELETE", u, bodyReader)
+	if err != nil {
+		return fmt.Errorf("DeleteTenant: new request: %w", err)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	if c.token != "" {
+		req.Header.Set("Authorization", "Bearer "+c.token)
+	}
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return fmt.Errorf("DeleteTenant: http do: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return decodeError(resp)
+	}
+	return nil
+}
+
 // ListTenantRegions calls GET /tenants/{id}/regions.
 func (c *Client) ListTenantRegions(ctx context.Context, in TenantIdPath) (ListTenantRegionsOutput, error) {
 	var zero ListTenantRegionsOutput

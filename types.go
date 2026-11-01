@@ -17,6 +17,12 @@ type CreateTenantInput struct {
 	Password string `json:"password"`
 }
 
+// DeleteTenantInput mirrors the Smithy structure of the same name.
+type DeleteTenantInput struct {
+	Id      string `json:"id"`
+	Confirm string `json:"confirm"`
+}
+
 // ListTenantRegionsOutput mirrors the Smithy structure of the same name.
 type ListTenantRegionsOutput struct {
 	Regions []string `json:"regions"`
